@@ -1,8 +1,11 @@
+#!/usr/bin/python3
 import discord
 from commands import execute_command
 
 client = discord.Client()
 
+with open("discord.key") as discord_key_file:
+   discord_key = discord_key_file.readline().rstrip('\n')
 
 @client.event
 async def on_message(message):
@@ -11,4 +14,4 @@ async def on_message(message):
             response = execute_command(message.content[4:])
             await client.send_message(message.channel, response)
 
-client.run('MjA5Mzg2ODkxOTYxODI3MzM4.Cn_3wQ._AevNMOXIhcxO0i1_auoz16udr0')
+client.run(discord_key) 
