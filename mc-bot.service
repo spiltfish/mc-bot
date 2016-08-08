@@ -1,0 +1,10 @@
+[Unit]
+Description=Discord Interface to Minecraft Infrastructure
+
+[Service]
+WorkingDirectory=/home/a_spilt_fish/mc-bot
+ExecStart=/usr/bin/python3 bot.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
