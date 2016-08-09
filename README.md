@@ -10,4 +10,7 @@ Spin up new Minecraft worlds
 Add/Remove mods
 Revert to the last backup
 Startup Progress
+    COMPLETE: VM Startup
+    TODO: Java Process Started
+    TODO: MC server ready
 Include current billing info in Donation message
