@@ -14,6 +14,10 @@ STOP = "stop"
 STATUS = "status"
 IP = "ip"
 
+def get_donation_info():
+    info_text = "Please consider donating: {link}".format(link="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KZ8YFPXGHKY3W&lc=US&item_name=Mary%27s%20Servers%20and%20Bots&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted")
+    return info_text
+
 
 def execute_command(command):
     if command.startswith(HELP):
@@ -24,6 +28,8 @@ def execute_command(command):
                    'ip'
     elif command.startswith(START):
         response = compute.instances().start(project=MC_PROJECT, zone=MC_ZONE, instance=MC_INSTANCE).execute()['status']
+        response += "\n"
+        response += get_donation_info()
     elif command.startswith(STOP):
         response = compute.instances().stop(project=MC_PROJECT, zone=MC_ZONE, instance=MC_INSTANCE).execute()['status']
     elif command.startswith(STATUS):
@@ -33,6 +39,7 @@ def execute_command(command):
     else:
         response = "Fuck you trever"
     return response
+
 
 
 if __name__ == '__main__':

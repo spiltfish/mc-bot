@@ -9,3 +9,5 @@ Spin up new Minecraft worlds
     From other modpack listings
 Add/Remove mods
 Revert to the last backup
+Startup Progress
+Include current billing info in Donation message
