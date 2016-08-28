@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log"
 	"time"
-	"discord"
-	"gcloud"
+	"./discord_util"
+	"./gcloud"
 )
 
 var(
@@ -15,11 +15,14 @@ var(
 	Password string
 	Token    string
 	BotId    string
+
+	Gci      gcloud.GCloudInfo
 )
 
 
 func init() {
-	di := discord.Read_config()
+	di := discord.ReadConfig("./bot/discord_config.yml")
+	Gci = gcloud.ReadConfig("./bot/gcloud_config.yml")
 
 	Email = di.Email
 	Password = di.Password
@@ -93,11 +96,11 @@ func createNewServer(session *discordgo.Session, message *discordgo.MessageCreat
 }
 
 func startMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-	result := gcloud.Start_server()
+	result := gcloud.Start_server(Gci)
     	session.ChannelMessageSend(message.ChannelID, result.Status)
-	status :=gcloud.Status_server().Status
+	status :=gcloud.Status_server(Gci).Status
 	for status != "RUNNING"{
-		status = gcloud.Status_server().Status
+		status = gcloud.Status_server(Gci).Status
 		log.Println("Waiting for Server to start. Is: ", result.Status)
 		time.Sleep(5000 * time.Millisecond)
 	}
@@ -105,17 +108,17 @@ func startMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 }
 
 func stopMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-	gcloud.Stop_server()
+	gcloud.Stop_server(Gci)
 	session.ChannelMessageSend(message.ChannelID, "Server Shutting down.")
 }
 
 func ipMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-	result := gcloud.Status_server()
+	result := gcloud.Status_server(Gci)
 	session.ChannelMessageSend(message.ChannelID, result.NetworkInterfaces[0].AccessConfigs[0].NatIP)
 }
 
 func statusMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-	result := gcloud.Status_server()
+	result := gcloud.Status_server(Gci)
 	_, _ = session.ChannelMessageSend(message.ChannelID, result.Status)
 }
 
