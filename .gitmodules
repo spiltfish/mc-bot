@@ -1,6 +1,3 @@
 [submodule "discord_util"]
 	path = discord_util
 	url = https://github.com/spiltfish/discord_util.git
-[submodule "gcloud"]
-	path = gcloud
-	url = https://github.com/spiltfish/gcloud.git
