@@ -7,7 +7,8 @@ import (
 	"log"
 	"time"
 	"./discord_util"
-	"./gcloud"
+	"strings"
+	"gcloud"
 )
 
 var(
@@ -22,7 +23,6 @@ var(
 
 func init() {
 	di := discord.ReadConfig("./bot/discord_config.yml")
-	Gci = gcloud.ReadConfig("./bot/gcloud_config.yml")
 
 	Email = di.Email
 	Password = di.Password
@@ -85,14 +85,19 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 		helpMessage(session, message)
 	}
 
-	if message.Content == "!mc new"{
+	if strings.HasPrefix(message.Content, "!mc new minecraft"){
 		createNewServer(session, message)
 	}
 
 }
 
 func createNewServer(session *discordgo.Session, message *discordgo.MessageCreate){
-	
+	words := strings.Fields(message.Content)
+	serverName := words[3]
+	serverVersion := words[4]
+	session.ChannelMessageSend(message.ChannelID, "Creating server" + "\"" + serverName + "\" " + serverVersion)
+	result := gcloud.CreateServer(Gci, serverName, serverVersion)
+	session.ChannelMessageSend(message.ChannelID, "Created server: " + result.Name)
 }
 
 func startMessage(session *discordgo.Session, message *discordgo.MessageCreate){
@@ -127,11 +132,11 @@ func donateMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 }
 
 func helpMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-
 	helpString := "ip" +
 		"status" +
 		"start" +
 		"stop" +
-		"donate"
+		"donate" +
+		"new minecraft <name> <version tag>"
 	_, _ = session.ChannelMessageSend(message.ChannelID, helpString)
 }
