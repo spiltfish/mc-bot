@@ -4,11 +4,10 @@ import (
 	"github.com/bwmarrin/discordgo"
 
 	"fmt"
-	"log"
-	"time"
 	"./discord_util"
 	"strings"
 	"gcloud"
+	"./mc-worker-sdk"
 )
 
 var(
@@ -91,40 +90,42 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 
 }
 
+
 func createNewServer(session *discordgo.Session, message *discordgo.MessageCreate){
 	words := strings.Fields(message.Content)
 	serverName := words[3]
 	serverVersion := words[4]
 	session.ChannelMessageSend(message.ChannelID, "Creating server" + "\"" + serverName + "\" " + serverVersion)
-	result := gcloud.CreateServer(Gci, serverName, serverVersion)
-	session.ChannelMessageSend(message.ChannelID, "Created server: " + result.Name)
+	mc_worker_sdk.CreateMinecraftServer(serverName)
+	session.ChannelMessageSend(message.ChannelID, "Created server.")
 }
 
 func startMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-	result := gcloud.Start_server(Gci)
-    	session.ChannelMessageSend(message.ChannelID, result.Status)
-	status :=gcloud.Status_server(Gci).Status
-	for status != "RUNNING"{
-		status = gcloud.Status_server(Gci).Status
-		log.Println("Waiting for Server to start. Is: ", result.Status)
-		time.Sleep(5000 * time.Millisecond)
-	}
+	words := strings.Fields(message.Content)
+	serverName := words[3]
+	mc_worker_sdk.PowerOnServer(serverName)
 	session.ChannelMessageSend(message.ChannelID, "Server startup completed.")
 }
 
 func stopMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-	gcloud.Stop_server(Gci)
+	words := strings.Fields(message.Content)
+	serverName := words[3]
+	mc_worker_sdk.PowerOffServer(serverName)
 	session.ChannelMessageSend(message.ChannelID, "Server Shutting down.")
 }
 
 func ipMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-	result := gcloud.Status_server(Gci)
-	session.ChannelMessageSend(message.ChannelID, result.NetworkInterfaces[0].AccessConfigs[0].NatIP)
+	words := strings.Fields(message.Content)
+	serverName := words[3]
+	result := mc_worker_sdk.GetMinecraftServerIp(serverName)
+	session.ChannelMessageSend(message.ChannelID, string(result))
 }
 
 func statusMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-	result := gcloud.Status_server(Gci)
-	_, _ = session.ChannelMessageSend(message.ChannelID, result.Status)
+	words := strings.Fields(message.Content)
+	serverName := words[3]
+	result := mc_worker_sdk.GetMinecraftServerStatus(serverName)
+	_, _ = session.ChannelMessageSend(message.ChannelID, string(result))
 }
 
 func donateMessage(session *discordgo.Session, message *discordgo.MessageCreate){
