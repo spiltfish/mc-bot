@@ -1,6 +1,3 @@
 [submodule "discord_util"]
 	path = discord_util
 	url = https://github.com/spiltfish/discord_util.git
-[submodule "mc-worker-sdk"]
-	path = mc-worker-sdk
-	url = https://github.com/spiltfish/mc-worker-sdk
