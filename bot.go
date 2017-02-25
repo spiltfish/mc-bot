@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"./discord_util"
 	"strings"
-	"gcloud"
 	"./mc-worker-sdk"
 )
 
@@ -16,7 +15,6 @@ var(
 	Token    string
 	BotId    string
 
-	Gci      gcloud.GCloudInfo
 )
 
 
