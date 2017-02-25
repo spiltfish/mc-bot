@@ -19,7 +19,7 @@ var(
 
 
 func init() {
-	di := discord.ReadConfig("./bot/discord_config.yml")
+	di := discord.ReadConfig("./config/discord_config.yml")
 
 	Email = di.Email
 	Password = di.Password
@@ -93,7 +93,7 @@ func createNewServer(session *discordgo.Session, message *discordgo.MessageCreat
 	words := strings.Fields(message.Content)
 	serverName := words[3]
 	serverVersion := words[4]
-	session.ChannelMessageSend(message.ChannelID, "Creating server" + "\"" + serverName + "\" " + serverVersion)
+	session.ChannelMessageSend(message.ChannelID, "Creating server" + " \"" + serverName + "\" " + serverVersion)
 	mc_worker_sdk.CreateMinecraftServer(serverName)
 	session.ChannelMessageSend(message.ChannelID, "Created server.")
 }
