@@ -143,7 +143,6 @@ func statusMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 	if err != nil{
 		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
 	}
-	session.ChannelMessageSend(message.ChannelID, fmt.Printf(err))
 	serverName := words[3]
 
 	result := mc_worker_sdk.GetMinecraftServerStatus(serverName)
