@@ -4,10 +4,10 @@ import (
 	"github.com/bwmarrin/discordgo"
 
 	"fmt"
-	"github.com/spiltfish/discord_util"
 	"strings"
 	"strconv"
 	"github.com/spiltfish/mc-worker-sdk"
+	"os"
 )
 
 var(
@@ -20,13 +20,10 @@ var(
 
 
 func init() {
-	di := discord.ReadConfig("./config/discord_config.yml")
-
-	Email = di.Email
-	Password = di.Password
-	Token = di.Token
-	BotId = di.BotId
-
+	Email = os.Getenv("EMAIL")
+	Password = os.Getenv("PASSWORD")
+	Token = os.Getenv("TOKEN")
+	BotId = os.Getenv("BOT_ID")
 }
 
 
@@ -141,15 +138,16 @@ func ipMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 }
 
 func statusMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-	words := strings.Fields(message.Content)
-	req_param := 3
-	if len(words) < req_param{
-		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(req_param) + " parameters.")
-	} else {
-		serverName := words[3]
-		result := mc_worker_sdk.GetMinecraftServerStatus(serverName)
-		_, _ = session.ChannelMessageSend(message.ChannelID, string(result))
+	required_parameters := 3
+	words, err := checkParameters(session, message, required_parameters)
+	if err != nil{
+		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
 	}
+	session.ChannelMessageSend(message.ChannelID, err)
+	serverName := words[3]
+
+	result := mc_worker_sdk.GetMinecraftServerStatus(serverName)
+	_, _ = session.ChannelMessageSend(message.ChannelID, string(result))
 }
 
 func donateMessage(session *discordgo.Session, message *discordgo.MessageCreate){
@@ -164,4 +162,12 @@ func helpMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 		"donate" +
 		"new minecraft <name> <version tag>"
 	_, _ = session.ChannelMessageSend(message.ChannelID, helpString)
+}
+
+func checkParameters(session *discordgo.Session, message *discordgo.MessageCreate, req_parameters int)(words []string, err error){
+	words = strings.Fields(message.Content)
+	if len(words) < req_parameters{
+	} else {
+
+	}
 }
