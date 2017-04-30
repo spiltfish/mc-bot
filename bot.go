@@ -39,7 +39,11 @@ func main() {
 	//Handlers
 	dg.AddHandler(messageCreate)
 
-	dg.Open()
+	err = dg.Open()
+
+	if err != nil {
+		fmt.Println("Error opening Discord session: ", err)
+	}
 
 	<-make(chan struct{})
 	return
