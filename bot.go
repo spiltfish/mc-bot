@@ -27,7 +27,7 @@ func init() {
 func main() {
 	fmt.Println("Bot starting up!")
 
-	dg, err := discordgo.New("Bot" + Token)
+	dg, err := discordgo.New(Token)
 	if err != nil {
 		fmt.Println("Unable to create Discord Session: ", err)
 	}
