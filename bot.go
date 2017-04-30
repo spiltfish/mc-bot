@@ -11,8 +11,6 @@ import (
 )
 
 var(
-	Email    string
-	Password string
 	Token    string
 	BotId    string
 
@@ -20,8 +18,6 @@ var(
 
 
 func init() {
-	Email = os.Getenv("EMAIL")
-	Password = os.Getenv("PASSWORD")
 	Token = os.Getenv("TOKEN")
 	BotId = os.Getenv("BOT_ID")
 }
@@ -51,6 +47,7 @@ func main() {
 }
 
 func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate){
+	fmt.Println("Message GET!")
 
 	if message.Author.ID == BotId {
 		return
