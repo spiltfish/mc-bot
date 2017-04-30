@@ -163,11 +163,12 @@ func helpMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 		"new minecraft <name> <version tag>"
 	_, _ = session.ChannelMessageSend(message.ChannelID, helpString)
 }
-//(words []string, err error)
-func checkParameters(session *discordgo.Session, message *discordgo.MessageCreate, req_parameters int) {
-	//words = strings.Fields(message.Content)
-	//if len(words) < req_parameters {
-	//} else {
-	//	fmt.Println("ahah")
-	//}
+
+func checkParameters(session *discordgo.Session, message *discordgo.MessageCreate, req_parameters int)(words []string, err error) {
+	words = strings.Fields(message.Content)
+	if len(words) < req_parameters {
+	} else {
+		fmt.Println("ahah")
+	}
+	return words, nil
 }
