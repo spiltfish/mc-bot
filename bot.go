@@ -143,7 +143,7 @@ func statusMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 	if err != nil{
 		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
 	}
-	session.ChannelMessageSend(message.ChannelID, err)
+	session.ChannelMessageSend(message.ChannelID, fmt.Printf(err))
 	serverName := words[3]
 
 	result := mc_worker_sdk.GetMinecraftServerStatus(serverName)
@@ -163,11 +163,11 @@ func helpMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 		"new minecraft <name> <version tag>"
 	_, _ = session.ChannelMessageSend(message.ChannelID, helpString)
 }
-
-func checkParameters(session *discordgo.Session, message *discordgo.MessageCreate, req_parameters int)(words []string, err error){
-	words = strings.Fields(message.Content)
-	if len(words) < req_parameters{
-	} else {
-
-	}
+//(words []string, err error)
+func checkParameters(session *discordgo.Session, message *discordgo.MessageCreate, req_parameters int) {
+	//words = strings.Fields(message.Content)
+	//if len(words) < req_parameters {
+	//} else {
+	//	fmt.Println("ahah")
+	//}
 }
