@@ -149,14 +149,14 @@ func ipMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 func statusMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 	required_parameters := 3
 	words, err := checkParameters(session, message, required_parameters)
-	if err != nil{
+	if err != nil {
 		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
+	}else {
+		serverName := words[3]
 
+		result := mc_worker_sdk.GetMinecraftServerStatus(serverName)
+		_, _ = session.ChannelMessageSend(message.ChannelID, string(result))
 	}
-	serverName := words[3]
-
-	result := mc_worker_sdk.GetMinecraftServerStatus(serverName)
-	_, _ = session.ChannelMessageSend(message.ChannelID, string(result))
 }
 
 func donateMessage(session *discordgo.Session, message *discordgo.MessageCreate){
