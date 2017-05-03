@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/bwmarrin/discordgo"
 
+	"errors"
 	"fmt"
 	"strings"
 	"strconv"
@@ -176,7 +177,7 @@ func checkParameters(session *discordgo.Session, message *discordgo.MessageCreat
 	words = strings.Fields(message.Content)
 	if len(words) < req_parameters {
 	} else {
-		err = "Too few parameters."
+		err = errors.New("Too few parameters.")
 	}
 	return words, err
 }
