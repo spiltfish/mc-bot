@@ -97,12 +97,13 @@ func createNewServer(session *discordgo.Session, message *discordgo.MessageCreat
 	words, err := checkParameters(message, required_parameters)
 	if err != nil{
 		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
-	} else {
-		serverName := words[4]
-		serverVersion := words[5]
-		session.ChannelMessageSend(message.ChannelID, "Creating server" + " \"" + serverName + "\" " + serverVersion)
-		mc_worker_sdk.CreateMinecraftServer(serverName)
-		session.ChannelMessageSend(message.ChannelID, "Created server.")
+		return
+	}
+	serverName := words[4]
+	serverVersion := words[5]
+	session.ChannelMessageSend(message.ChannelID, "Creating server" + " \"" + serverName + "\" " + serverVersion)
+	mc_worker_sdk.CreateMinecraftServer(serverName)
+	session.ChannelMessageSend(message.ChannelID, "Created server.")
 	}
 }
 
@@ -111,11 +112,11 @@ func startMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 	words, err := checkParameters(message, required_parameters)
 	if err != nil{
 		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
-	} else{
-		serverName := words[3]
-		mc_worker_sdk.PowerOnServer(serverName)
-		session.ChannelMessageSend(message.ChannelID, "Server startup completed.")
+		return
 	}
+	serverName := words[3]
+	mc_worker_sdk.PowerOnServer(serverName)
+	session.ChannelMessageSend(message.ChannelID, "Server startup completed.")
 }
 
 func stopMessage(session *discordgo.Session, message *discordgo.MessageCreate){
@@ -123,12 +124,11 @@ func stopMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 	words, err := checkParameters(message, required_parameters)
 	if err != nil{
 		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
-	} else {
-		serverName := words[3]
-		fmt.Println("Shutting down server: " + serverName )
-		mc_worker_sdk.PowerOffServer(serverName)
-		session.ChannelMessageSend(message.ChannelID, "Server Shutting down.")
 	}
+	serverName := words[3]
+	fmt.Println("Shutting down server: " + serverName )
+	mc_worker_sdk.PowerOffServer(serverName)
+	session.ChannelMessageSend(message.ChannelID, "Server Shutting down.")
 }
 
 func ipMessage(session *discordgo.Session, message *discordgo.MessageCreate){
@@ -137,11 +137,10 @@ func ipMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 	words, err := checkParameters(message, required_parameters)
 	if err != nil{
 		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
-	} else {
-		serverName := words[3]
-		result := mc_worker_sdk.GetMinecraftServerIp(serverName)
-		session.ChannelMessageSend(message.ChannelID, string(result))
 	}
+	serverName := words[3]
+	result := mc_worker_sdk.GetMinecraftServerIp(serverName)
+	session.ChannelMessageSend(message.ChannelID, string(result))
 }
 
 func statusMessage(session *discordgo.Session, message *discordgo.MessageCreate){
@@ -149,10 +148,12 @@ func statusMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 	words, err := checkParameters(message, required_parameters)
 	if err != nil {
 		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
-	}else {
-		serverName := words[3]
-		result := mc_worker_sdk.GetMinecraftServerStatus(serverName)
-		_, _ = session.ChannelMessageSend(message.ChannelID, string(result))
+	}
+	serverName := words[3]
+	result := mc_worker_sdk.GetMinecraftServerStatus(serverName)
+	_, err = session.ChannelMessageSend(message.ChannelID, string(result))
+	if err != nil {
+		fmt.Println(err.Error())
 	}
 }
 
