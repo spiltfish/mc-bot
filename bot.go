@@ -13,19 +13,21 @@ import (
 var(
 	Token    string
 	BotId    string
-
+        WorkerUrl string
 )
 
 
 func init() {
 	Token = os.Getenv("TOKEN")
 	BotId = os.Getenv("BOT_ID")
+	WorkerUrl = os.Getenv("WORKER_URL")
 }
 
 
 
 func main() {
 	fmt.Println("Bot starting up!")
+	mc_worker_sdk.SetServer(WorkerUrl)
 	Token = strings.Replace(Token, "\n","",-1)
 
 	dg, err := discordgo.New("Bot " + Token)
@@ -122,6 +124,7 @@ func stopMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(req_param) + " parameters.")
 	} else {
 		serverName := words[3]
+		fmt.Println("Shutting down server: " + serverName )
 		mc_worker_sdk.PowerOffServer(serverName)
 		session.ChannelMessageSend(message.ChannelID, "Server Shutting down.")
 	}
