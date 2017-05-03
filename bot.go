@@ -145,6 +145,7 @@ func ipMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 }
 
 func statusMessage(session *discordgo.Session, message *discordgo.MessageCreate){
+	fmt.Println("Getting status....")
 	required_parameters := 3
 	words, err := checkParameters(message, required_parameters)
 	if err != nil {
