@@ -92,10 +92,11 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 
 
 func createNewServer(session *discordgo.Session, message *discordgo.MessageCreate){
-	words := strings.Fields(message.Content)
-	req_param := 3
-	if len(words) < req_param{
-		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(req_param) + " parameters.")
+	required_parameters := 3
+	words, err := checkParameters(session, message, required_parameters)
+	if err != nil{
+
+		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
 	} else {
 		serverName := words[3]
 		serverVersion := words[4]
@@ -106,22 +107,23 @@ func createNewServer(session *discordgo.Session, message *discordgo.MessageCreat
 }
 
 func startMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-	words := strings.Fields(message.Content)
-	req_param := 3
-	if len(words) < req_param{
-		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(req_param) + " parameters.")
+	required_parameters := 3
+	words, err := checkParameters(session, message, required_parameters)
+	if err != nil{
+
+		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
 	} else{
-	serverName := words[3]
-	mc_worker_sdk.PowerOnServer(serverName)
-	session.ChannelMessageSend(message.ChannelID, "Server startup completed.")
+		serverName := words[3]
+		mc_worker_sdk.PowerOnServer(serverName)
+		session.ChannelMessageSend(message.ChannelID, "Server startup completed.")
 	}
 }
 
 func stopMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-	words := strings.Fields(message.Content)
-	req_param := 3
-	if len(words) < req_param{
-		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(req_param) + " parameters.")
+	required_parameters := 3
+	words, err := checkParameters(session, message, required_parameters)
+	if err != nil{
+		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
 	} else {
 		serverName := words[3]
 		fmt.Println("Shutting down server: " + serverName )
@@ -132,9 +134,10 @@ func stopMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 
 func ipMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 	words := strings.Fields(message.Content)
-	req_param := 3
-	if len(words) < req_param{
-		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(req_param) + " parameters.")
+	required_parameters := 3
+	words, err := checkParameters(session, message, required_parameters)
+	if err != nil{
+		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
 	} else {
 		serverName := words[3]
 		result := mc_worker_sdk.GetMinecraftServerIp(serverName)
@@ -147,6 +150,7 @@ func statusMessage(session *discordgo.Session, message *discordgo.MessageCreate)
 	words, err := checkParameters(session, message, required_parameters)
 	if err != nil{
 		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
+
 	}
 	serverName := words[3]
 
@@ -172,7 +176,7 @@ func checkParameters(session *discordgo.Session, message *discordgo.MessageCreat
 	words = strings.Fields(message.Content)
 	if len(words) < req_parameters {
 	} else {
-		fmt.Println("ahah")
+		err = "Too few parameters."
 	}
-	return words, nil
+	return words, err
 }
