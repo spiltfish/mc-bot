@@ -93,13 +93,13 @@ func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate)
 
 
 func createNewServer(session *discordgo.Session, message *discordgo.MessageCreate){
-	required_parameters := 3
+	required_parameters := 5
 	words, err := checkParameters(message, required_parameters)
 	if err != nil{
 		session.ChannelMessageSend(message.ChannelID, "Not enough paramerters. Requires " + strconv.Itoa(required_parameters) + " parameters.")
 	} else {
-		serverName := words[3]
-		serverVersion := words[4]
+		serverName := words[4]
+		serverVersion := words[5]
 		session.ChannelMessageSend(message.ChannelID, "Creating server" + " \"" + serverName + "\" " + serverVersion)
 		mc_worker_sdk.CreateMinecraftServer(serverName)
 		session.ChannelMessageSend(message.ChannelID, "Created server.")
@@ -145,7 +145,6 @@ func ipMessage(session *discordgo.Session, message *discordgo.MessageCreate){
 }
 
 func statusMessage(session *discordgo.Session, message *discordgo.MessageCreate){
-	fmt.Println("Getting status....")
 	required_parameters := 3
 	words, err := checkParameters(message, required_parameters)
 	if err != nil {
