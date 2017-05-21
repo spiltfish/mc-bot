@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/bwmarrin/discordgo"
-
 	"errors"
 	"fmt"
 	"strings"
@@ -51,37 +50,31 @@ func main() {
 }
 
 func messageCreate(session *discordgo.Session, message *discordgo.MessageCreate){
-	fmt.Println("Message GET!")
-
 	if message.Author.ID == BotId {
 		return
 	}
 
-	if message.Content == "!mc" {
-		_, _ = session.ChannelMessageSend(message.ChannelID, "NOT IMPLEMENTED")
-	}
-
-	if message.Content == "!mc start"{
+	if strings.HasPrefix(message.Content,"!mc start") {
 		startMessage(session, message)
 	}
 
-	if message.Content == "!mc stop"{
+	if strings.HasPrefix(message.Content , "!mc stop"){
 		stopMessage(session, message)
 	}
 
-	if message.Content == "!mc ip"{
+	if strings.HasPrefix(message.Content , "!mc ip"){
 		ipMessage(session, message)
 	}
 
-	if message.Content == "!mc status"{
+	if strings.HasPrefix(message.Content , "!mc status"){
 		statusMessage(session, message)
 	}
 
-	if message.Content == "!mc donate"{
+	if strings.HasPrefix(message.Content , "!mc donate"){
 		donateMessage(session, message)
 	}
 
-	if message.Content == "!mc help"{
+	if strings.HasPrefix(message.Content , "!mc help"){
 		helpMessage(session, message)
 	}
 
@@ -104,7 +97,6 @@ func createNewServer(session *discordgo.Session, message *discordgo.MessageCreat
 	session.ChannelMessageSend(message.ChannelID, "Creating server" + " \"" + serverName + "\" " + serverVersion)
 	mc_worker_sdk.CreateMinecraftServer(serverName)
 	session.ChannelMessageSend(message.ChannelID, "Created server.")
-	}
 }
 
 func startMessage(session *discordgo.Session, message *discordgo.MessageCreate){
